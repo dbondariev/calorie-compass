@@ -1,0 +1,9 @@
+{
+  "name": "@calorie-compass/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./schema/*": "./schema/*"
+  }
+}

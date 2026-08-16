@@ -1,14 +1,8 @@
-import { readFileSync } from "node:fs";
 import Ajv2020Module, { type ErrorObject } from "ajv/dist/2020.js";
+import historySchema from "@calorie-compass/contracts/schema/calculation-history.schema.json" with { type: "json" };
+import requestSchema from "@calorie-compass/contracts/schema/calculation-request.schema.json" with { type: "json" };
+import responseSchema from "@calorie-compass/contracts/schema/calculation-response.schema.json" with { type: "json" };
 import type { CalculationRequest } from "./types.js";
-
-const schemaDirectory = new URL("../../contracts/schema/", import.meta.url);
-const readSchema = (name: string): object =>
-  JSON.parse(readFileSync(new URL(name, schemaDirectory), "utf8"));
-
-const requestSchema = readSchema("calculation-request.schema.json");
-const responseSchema = readSchema("calculation-response.schema.json");
-const historySchema = readSchema("calculation-history.schema.json");
 const ajv = new Ajv2020Module.default({ allErrors: true, strict: true, formats: {
   "date-time": /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/,
 } });

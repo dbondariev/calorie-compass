@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/dbondariev/calorie-compass.git"
   },
-  "workspaces": ["frontend", "bff"],
+  "workspaces": ["frontend", "bff", "contracts"],
   "scripts": {
     "dev": "concurrently -n frontend,bff,backend -c cyan,magenta,yellow \"npm run dev -w frontend\" \"npm run dev -w bff\" \"npm run dev:backend\"",
     "dev:backend": "cd backend && .venv/bin/flask --app app:create_app run --debug --port 5001",
