@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calorie-compass.local/schema/calculation-request.schema.json",
+  "title": "CalculationRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["age", "sex", "heightCm", "weightKg", "activityLevel", "goal"],
+  "properties": {
+    "age": { "type": "integer", "minimum": 14, "maximum": 100 },
+    "sex": { "type": "string", "enum": ["female", "male"] },
+    "heightCm": { "type": "number", "minimum": 120, "maximum": 230 },
+    "weightKg": { "type": "number", "minimum": 35, "maximum": 300 },
+    "activityLevel": {
+      "type": "string",
+      "enum": ["sedentary", "light", "moderate", "active", "very_active"]
+    },
+    "goal": { "type": "string", "enum": ["lose", "maintain", "gain"] }
+  }
+}

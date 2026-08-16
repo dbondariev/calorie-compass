@@ -1,0 +1,52 @@
+openapi: 3.1.0
+info:
+  title: Calorie Compass API
+  version: 1.0.0
+  description: Public contract exposed by the BFF.
+servers:
+  - url: /api
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        '200':
+          description: Service health
+  /calculations:
+    post:
+      operationId: createCalculation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schema/calculation-request.schema.json
+      responses:
+        '201':
+          description: Calculated nutrition targets
+          content:
+            application/json:
+              schema:
+                $ref: ../schema/calculation-response.schema.json
+        '400':
+          description: Invalid request
+    get:
+      operationId: listCalculations
+      responses:
+        '200':
+          description: Recent calculations
+          content:
+            application/json:
+              schema:
+                $ref: ../schema/calculation-history.schema.json
+  /calculations/{calculationId}:
+    delete:
+      operationId: deleteCalculation
+      parameters:
+        - in: path
+          name: calculationId
+          required: true
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '204': { description: Deleted }
+        '404': { description: Not found }

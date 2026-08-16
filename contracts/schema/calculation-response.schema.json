@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calorie-compass.local/schema/calculation-response.schema.json",
+  "title": "CalculationResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "bmi", "bmiCategory", "bmr", "maintenanceCalories", "targetCalories", "macros", "createdAt"],
+  "properties": {
+    "id": { "type": "integer" },
+    "bmi": { "type": "number" },
+    "bmiCategory": { "type": "string" },
+    "bmr": { "type": "integer" },
+    "maintenanceCalories": { "type": "integer" },
+    "targetCalories": { "type": "integer" },
+    "macros": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["proteinGrams", "fatGrams", "carbGrams"],
+      "properties": {
+        "proteinGrams": { "type": "integer", "minimum": 0 },
+        "fatGrams": { "type": "integer", "minimum": 0 },
+        "carbGrams": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "inputs": {
+      "$ref": "https://calorie-compass.local/schema/calculation-request.schema.json"
+    }
+  }
+}

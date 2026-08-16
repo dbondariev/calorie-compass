@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calorie-compass.local/schema/calculation-history.schema.json",
+  "title": "CalculationHistory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "allOf": [
+          { "$ref": "https://calorie-compass.local/schema/calculation-response.schema.json" },
+          { "type": "object", "properties": { "inputs": {} }, "required": ["inputs"] }
+        ]
+      }
+    }
+  }
+}

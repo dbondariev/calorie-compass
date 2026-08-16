@@ -1,0 +1,22 @@
+{
+  "name": "calorie-compass",
+  "version": "1.0.0",
+  "description": "Full-stack calorie and macro calculator with React, Express BFF, Flask, and PostgreSQL.",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dbondariev/calorie-compass.git"
+  },
+  "workspaces": ["frontend", "bff"],
+  "scripts": {
+    "dev": "concurrently -n frontend,bff,backend -c cyan,magenta,yellow \"npm run dev -w frontend\" \"npm run dev -w bff\" \"npm run dev:backend\"",
+    "dev:backend": "cd backend && .venv/bin/flask --app app:create_app run --debug --port 5001",
+    "build": "npm run build -w bff && npm run build -w frontend",
+    "test": "npm run test -w bff && npm run test -w frontend && cd backend && .venv/bin/pytest",
+    "lint": "npm run lint -w bff && npm run lint -w frontend && cd backend && .venv/bin/ruff check app tests"
+  },
+  "devDependencies": {
+    "concurrently": "10.0.5"
+  }
+}
