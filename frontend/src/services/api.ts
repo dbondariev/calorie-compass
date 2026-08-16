@@ -27,7 +27,7 @@ const errorMessage = (body: ErrorPayload): string => {
   return body.message ?? "Something went wrong. Please try again.";
 };
 
-async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+async function apiRequest<T>(path: string, init?: RequestInit, attempt = 0): Promise<T> {
   const controller = new AbortController();
   const timeout = globalThis.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
@@ -39,6 +39,11 @@ async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
         : init?.headers,
       signal: controller.signal,
     });
+
+    const method = init?.method ?? "GET";
+    if (method === "GET" && attempt === 0 && [502, 503, 504].includes(response.status)) {
+      return apiRequest<T>(path, init, attempt + 1);
+    }
 
     if (response.status === 204) return undefined as T;
 

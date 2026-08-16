@@ -7,7 +7,7 @@ import { HistoryList } from "./components/HistoryList";
 import { ResultPanel } from "./components/ResultPanel";
 import { usePreferences } from "./preferences";
 import type { CalculationForm } from "./schemas/calculation";
-import { calculationApi } from "./services/api";
+import { ApiError, calculationApi } from "./services/api";
 import type { CalculationResult } from "./types/calculation";
 
 export default function App() {
@@ -21,6 +21,16 @@ export default function App() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
 
+  const friendlyError = useCallback((caught: unknown, fallback: "historyLoadError" | "calculateError" | "deleteError") => {
+    if (caught instanceof ApiError) {
+      if (caught.status === 0) return t("networkError");
+      if (caught.status === 408) return t("requestTimeout");
+      if (caught.status >= 500) return t("serviceUnavailable");
+      return caught.message;
+    }
+    return caught instanceof Error ? caught.message : t(fallback);
+  }, [t]);
+
   const loadHistory = useCallback(async () => {
     setHistoryLoading(true);
     setHistoryError(null);
@@ -28,11 +38,11 @@ export default function App() {
       const data = await calculationApi.list();
       setHistory(data.items);
     } catch (caught) {
-      setHistoryError(caught instanceof Error ? caught.message : t("historyLoadError"));
+      setHistoryError(friendlyError(caught, "historyLoadError"));
     } finally {
       setHistoryLoading(false);
     }
-  }, [t]);
+  }, [friendlyError]);
 
   useEffect(() => { void loadHistory(); }, [loadHistory]);
   useEffect(() => { document.documentElement.lang = locale; }, [locale]);
@@ -45,7 +55,7 @@ export default function App() {
       setResult(created);
       await loadHistory();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : t("calculateError"));
+      setError(friendlyError(caught, "calculateError"));
     } finally {
       setSubmitting(false);
     }
@@ -59,7 +69,7 @@ export default function App() {
       if (result?.id === id) setResult(null);
       setNotification(t("deleted"));
     } catch (caught) {
-      setNotification(caught instanceof Error ? caught.message : t("deleteError"));
+      setNotification(friendlyError(caught, "deleteError"));
     } finally {
       setDeletingId(null);
     }

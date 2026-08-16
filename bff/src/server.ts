@@ -30,6 +30,13 @@ const server = createApp({
   staticDirectory,
 }).listen(port, () => {
   console.log(`BFF listening on http://localhost:${port}`);
+  void fetch(`${backendUrl}/api/v1/health`, {
+    signal: AbortSignal.timeout(requestTimeoutMs),
+  }).then((response) => {
+    if (!response.ok) console.warn("Backend warm-up returned", response.status);
+  }).catch(() => {
+    console.warn("Backend warm-up did not complete; requests will retry normally.");
+  });
 });
 
 const shutdown = (signal: string) => {

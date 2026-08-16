@@ -42,4 +42,14 @@ describe("calculation API client", () => {
       expect.objectContaining({ status: 0, message: expect.not.stringContaining("socket details") }),
     );
   });
+
+  it("retries a safe read once when a sleeping service returns a gateway error", async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(jsonResponse({ error: "upstream_unavailable" }, 502))
+      .mockResolvedValueOnce(jsonResponse({ items: [] }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(calculationApi.list()).resolves.toEqual({ items: [] });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
 });
