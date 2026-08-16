@@ -4,6 +4,7 @@ import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import './index.css'
 import App from './App.tsx'
 import { ErrorBoundary } from './components/ErrorBoundary.tsx'
+import { PreferencesProvider } from './preferences.tsx'
 
 const theme = createTheme({
   palette: {
@@ -26,7 +27,9 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ErrorBoundary>
-        <App />
+        <PreferencesProvider>
+          <App />
+        </PreferencesProvider>
       </ErrorBoundary>
     </ThemeProvider>
   </StrictMode>,

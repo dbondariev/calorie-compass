@@ -5,11 +5,13 @@ import { useCallback, useEffect, useState } from "react";
 import { CalculatorForm } from "./components/CalculatorForm";
 import { HistoryList } from "./components/HistoryList";
 import { ResultPanel } from "./components/ResultPanel";
+import { usePreferences } from "./preferences";
 import type { CalculationForm } from "./schemas/calculation";
 import { calculationApi } from "./services/api";
 import type { CalculationResult } from "./types/calculation";
 
 export default function App() {
+  const { locale, t } = usePreferences();
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [history, setHistory] = useState<CalculationResult[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -26,13 +28,14 @@ export default function App() {
       const data = await calculationApi.list();
       setHistory(data.items);
     } catch (caught) {
-      setHistoryError(caught instanceof Error ? caught.message : "Could not load calculation history.");
+      setHistoryError(caught instanceof Error ? caught.message : t("historyLoadError"));
     } finally {
       setHistoryLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => { void loadHistory(); }, [loadHistory]);
+  useEffect(() => { document.documentElement.lang = locale; }, [locale]);
 
   const calculate = async (values: CalculationForm) => {
     setSubmitting(true);
@@ -42,7 +45,7 @@ export default function App() {
       setResult(created);
       await loadHistory();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Unable to calculate right now.");
+      setError(caught instanceof Error ? caught.message : t("calculateError"));
     } finally {
       setSubmitting(false);
     }
@@ -54,9 +57,9 @@ export default function App() {
       await calculationApi.remove(id);
       setHistory((items) => items.filter((item) => item.id !== id));
       if (result?.id === id) setResult(null);
-      setNotification("Calculation deleted.");
+      setNotification(t("deleted"));
     } catch (caught) {
-      setNotification(caught instanceof Error ? caught.message : "Could not delete the calculation.");
+      setNotification(caught instanceof Error ? caught.message : t("deleteError"));
     } finally {
       setDeletingId(null);
     }
@@ -75,9 +78,9 @@ export default function App() {
 
       <Container component="main" maxWidth="lg">
         <Box py={{ xs: 4, md: 7 }} maxWidth={760}>
-          <Typography variant="overline" color="primary" fontWeight={750} letterSpacing={1.5}>Nutrition made practical</Typography>
-          <Typography variant="h2" component="h1" fontWeight={800} letterSpacing={-2.5} mt={1}>Know what fuels you.</Typography>
-          <Typography variant="h6" color="text.secondary" fontWeight={400} mt={1.5} maxWidth={620}>A clear daily calorie and macro estimate—built around your body, routine and goal.</Typography>
+          <Typography variant="overline" color="primary" fontWeight={750} letterSpacing={1.5}>{t("nutritionPractical")}</Typography>
+          <Typography variant="h2" component="h1" fontWeight={800} letterSpacing={-2.5} mt={1}>{t("heroTitle")}</Typography>
+          <Typography variant="h6" color="text.secondary" fontWeight={400} mt={1.5} maxWidth={620}>{t("heroBody")}</Typography>
         </Box>
 
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1.08fr) minmax(380px, .92fr)" }, gap: 3, alignItems: "stretch" }}>
