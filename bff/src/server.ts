@@ -10,6 +10,10 @@ const configuredBackendUrl = process.env.BACKEND_URL ?? "http://localhost:5001";
 const backendUrl = configuredBackendUrl.includes("://")
   ? configuredBackendUrl
   : `http://${configuredBackendUrl}`;
+const configuredTimeout = Number(process.env.REQUEST_TIMEOUT_MS ?? 5_000);
+const requestTimeoutMs = Number.isFinite(configuredTimeout) && configuredTimeout > 0
+  ? configuredTimeout
+  : 5_000;
 const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "http://localhost:5173,http://127.0.0.1:5173")
   .split(",")
   .map((origin) => origin.trim())
@@ -19,7 +23,12 @@ const staticDirectory = process.env.NODE_ENV === "production" && existsSync(prod
   ? productionAssets
   : undefined;
 
-const server = createApp({ backendUrl, allowedOrigins, staticDirectory }).listen(port, () => {
+const server = createApp({
+  backendUrl,
+  allowedOrigins,
+  requestTimeoutMs,
+  staticDirectory,
+}).listen(port, () => {
   console.log(`BFF listening on http://localhost:${port}`);
 });
 

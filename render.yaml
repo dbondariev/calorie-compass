@@ -33,7 +33,9 @@ services:
         fromService:
           type: web
           name: calorie-compass-backend
-          property: hostport
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: REQUEST_TIMEOUT_MS
+        value: "65000"
 
 databases:
   - name: calorie-compass-db

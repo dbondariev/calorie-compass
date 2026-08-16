@@ -1,7 +1,8 @@
 import type { CalculationRequest, CalculationResult } from "../types/calculation";
 
 const API_URL = import.meta.env.VITE_BFF_URL ?? "/api";
-const REQUEST_TIMEOUT_MS = 8_000;
+// Render's free backend can take up to about a minute to wake after inactivity.
+const REQUEST_TIMEOUT_MS = 70_000;
 
 interface ErrorPayload {
   message?: string;
