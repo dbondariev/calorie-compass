@@ -100,27 +100,30 @@ export function CalculatorForm({ loading, error, onSubmit }: Props) {
         </FormControl>
       )} />
 
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <TextField fullWidth label={t("age")} type="number" error={Boolean(errors.age)} helperText={errors.age?.message ?? t("ageRange")} slotProps={{ htmlInput: { min: 14, max: 100, step: 1 } }} {...register("age")} />
+      <Stack direction={{ xs: "column", sm: "row" }} alignItems="flex-start" spacing={2}>
+        <TextField sx={{ flex: 1, minWidth: 0 }} fullWidth label={t("age")} type="number" error={Boolean(errors.age)} helperText={errors.age?.message ?? t("ageRange")} slotProps={{ htmlInput: { min: 14, max: 100, step: 1 } }} {...register("age")} />
         {units === "metric" ? (
-          <TextField fullWidth label={t("height")} type="number" error={Boolean(errors.heightCm)} helperText={errors.heightCm?.message ?? t("metricHeightRange")} slotProps={{ htmlInput: { min: 120, max: 230, step: 0.1 }, input: { endAdornment: <InputAdornment position="end">cm</InputAdornment> } }} {...register("heightCm")} />
+          <TextField sx={{ flex: 1, minWidth: 0 }} fullWidth label={t("height")} type="number" error={Boolean(errors.heightCm)} helperText={errors.heightCm?.message ?? t("metricHeightRange")} slotProps={{ htmlInput: { min: 120, max: 230, step: 0.1 }, input: { endAdornment: <InputAdornment position="end">cm</InputAdornment> } }} {...register("heightCm")} />
         ) : (
           <Controller name="heightCm" control={control} render={({ field }) => {
             const height = splitHeight(Number(field.value));
             const updateHeight = (feet: number, inches: number) => field.onChange(inchesToCentimeters(feet * 12 + inches));
             return (
-              <Stack direction="row" spacing={1} flex={1}>
-                <TextField label={t("feet")} type="number" value={height.feet} onBlur={field.onBlur} onChange={(event) => updateHeight(Number(event.target.value), height.inches)} error={Boolean(errors.heightCm)} helperText={errors.heightCm?.message ?? t("imperialHeightRange")} slotProps={{ htmlInput: { min: 3, max: 7, step: 1 } }} />
-                <TextField label={t("inches")} type="number" value={height.inches} onBlur={field.onBlur} onChange={(event) => updateHeight(height.feet, Number(event.target.value))} error={Boolean(errors.heightCm)} slotProps={{ htmlInput: { min: 0, max: 11.9, step: 0.1 } }} />
+              <Stack flex={1} minWidth={0}>
+                <Stack direction="row" spacing={1}>
+                  <TextField sx={{ flex: 1, minWidth: 0 }} fullWidth label={t("feet")} type="number" value={height.feet} onBlur={field.onBlur} onChange={(event) => updateHeight(Number(event.target.value), height.inches)} error={Boolean(errors.heightCm)} slotProps={{ htmlInput: { min: 3, max: 7, step: 1 } }} />
+                  <TextField sx={{ flex: 1, minWidth: 0 }} fullWidth label={t("inches")} type="number" value={height.inches} onBlur={field.onBlur} onChange={(event) => updateHeight(height.feet, Number(event.target.value))} error={Boolean(errors.heightCm)} slotProps={{ htmlInput: { min: 0, max: 11.9, step: 0.1 } }} />
+                </Stack>
+                <FormHelperText error={Boolean(errors.heightCm)} sx={{ mx: 1.75 }}>{errors.heightCm?.message ?? t("imperialHeightRange")}</FormHelperText>
               </Stack>
             );
           }} />
         )}
         {units === "metric" ? (
-          <TextField fullWidth label={t("weight")} type="number" error={Boolean(errors.weightKg)} helperText={errors.weightKg?.message ?? t("metricWeightRange")} slotProps={{ htmlInput: { min: 35, max: 300, step: 0.1 }, input: { endAdornment: <InputAdornment position="end">kg</InputAdornment> } }} {...register("weightKg")} />
+          <TextField sx={{ flex: 1, minWidth: 0 }} fullWidth label={t("weight")} type="number" error={Boolean(errors.weightKg)} helperText={errors.weightKg?.message ?? t("metricWeightRange")} slotProps={{ htmlInput: { min: 35, max: 300, step: 0.1 }, input: { endAdornment: <InputAdornment position="end">kg</InputAdornment> } }} {...register("weightKg")} />
         ) : (
           <Controller name="weightKg" control={control} render={({ field }) => (
-            <TextField fullWidth label={t("weight")} type="number" value={Number(kilogramsToPounds(Number(field.value)).toFixed(1))} onBlur={field.onBlur} onChange={(event) => field.onChange(poundsToKilograms(Number(event.target.value)))} error={Boolean(errors.weightKg)} helperText={errors.weightKg?.message ?? t("imperialWeightRange")} slotProps={{ htmlInput: { min: 77, max: 661, step: 0.1 }, input: { endAdornment: <InputAdornment position="end">lb</InputAdornment> } }} />
+            <TextField sx={{ flex: 1, minWidth: 0 }} fullWidth label={t("weight")} type="number" value={Number(kilogramsToPounds(Number(field.value)).toFixed(1))} onBlur={field.onBlur} onChange={(event) => field.onChange(poundsToKilograms(Number(event.target.value)))} error={Boolean(errors.weightKg)} helperText={errors.weightKg?.message ?? t("imperialWeightRange")} slotProps={{ htmlInput: { min: 77, max: 661, step: 0.1 }, input: { endAdornment: <InputAdornment position="end">lb</InputAdornment> } }} />
           )} />
         )}
       </Stack>
