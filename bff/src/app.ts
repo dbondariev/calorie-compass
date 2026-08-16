@@ -119,7 +119,9 @@ export function createApp(options: AppOptions = {}) {
     }
   };
 
-  app.get("/api/health", proxy);
+  app.get("/api/health", (_request, response) => {
+    response.json({ service: "bff", status: "ok" });
+  });
   app.get("/api/calculations", proxy);
   app.delete("/api/calculations/:calculationId", (request, response, next) => {
     const calculationId = Number(request.params.calculationId);

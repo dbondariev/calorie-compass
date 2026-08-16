@@ -71,10 +71,18 @@ describe("BFF", () => {
 
   it("maps network failures to a safe upstream error", async () => {
     const fetchImpl = vi.fn<typeof fetch>().mockRejectedValue(new Error("connection refused"));
-    const response = await request(createApp({ fetchImpl })).get("/api/health");
+    const response = await request(createApp({ fetchImpl })).get("/api/calculations");
     expect(response.status).toBe(502);
     expect(response.body.error).toBe("upstream_unavailable");
     expect(response.text).not.toContain("connection refused");
+  });
+
+  it("reports BFF liveness without depending on Flask", async () => {
+    const fetchImpl = vi.fn<typeof fetch>().mockRejectedValue(new Error("connection refused"));
+    const response = await request(createApp({ fetchImpl })).get("/api/health");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ service: "bff", status: "ok" });
+    expect(fetchImpl).not.toHaveBeenCalled();
   });
 
   it("rejects invalid identifiers without calling Flask", async () => {
