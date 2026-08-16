@@ -13,6 +13,6 @@ const configuredTimeout = Number(process.env.REQUEST_TIMEOUT_MS ?? 30_000);
 const requestTimeoutMs = Number.isFinite(configuredTimeout) && configuredTimeout > 0
   ? configuredTimeout
   : 30_000;
-const app = createApp({ backendUrl, requestTimeoutMs });
+const app = createApp({ backendUrl, requestTimeoutMs, trustProxy: 1 });
 
 export default app;

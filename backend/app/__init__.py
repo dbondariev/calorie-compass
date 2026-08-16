@@ -1,5 +1,6 @@
 """Flask application factory for Calorie Compass."""
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -14,7 +15,8 @@ from .services.errors import ApiError
 
 
 def create_app(config: type[Config] = Config) -> Flask:
-    app = Flask(__name__)
+    instance_path = "/tmp/calorie-compass-instance" if os.getenv("VERCEL") else None
+    app = Flask(__name__, instance_path=instance_path)
     app.config.from_object(config)
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 

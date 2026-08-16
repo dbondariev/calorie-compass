@@ -20,6 +20,7 @@ interface AppOptions {
   fetchImpl?: typeof globalThis.fetch;
   requestTimeoutMs?: number;
   staticDirectory?: string;
+  trustProxy?: number | string | boolean;
 }
 
 const parseJson = async (response: globalThis.Response): Promise<unknown> => {
@@ -52,10 +53,12 @@ export function createApp(options: AppOptions = {}) {
     fetchImpl = globalThis.fetch,
     requestTimeoutMs = 5_000,
     staticDirectory,
+    trustProxy,
   } = options;
   const app = express();
 
   app.disable("x-powered-by");
+  if (trustProxy !== undefined) app.set("trust proxy", trustProxy);
   app.use(helmet());
   app.use(cors({ origin: allowedOrigins }));
   app.use((request, response, next) => {
@@ -69,6 +72,7 @@ export function createApp(options: AppOptions = {}) {
     limit: 120,
     standardHeaders: "draft-8",
     legacyHeaders: false,
+    validate: { forwardedHeader: false },
   }));
   app.use(express.json({ limit: "32kb", strict: true }));
   app.use(morgan("tiny"));
