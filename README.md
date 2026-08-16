@@ -1,6 +1,8 @@
 # Calorie Compass
 
-## [Live Demo](https://calorie-compass-web.onrender.com/)
+## [Live Demo](https://calorie-compass-phi.vercel.app/)
+
+Alternative deployment: [Render](https://calorie-compass-web.onrender.com/)
 
 A full-stack calorie and macro calculator built as a small commercial-style
 monorepo. The React app communicates only with a Backend-for-Frontend (BFF),
