@@ -1,5 +1,7 @@
 # Calorie Compass
 
+## [Live Demo](https://calorie-compass-web.onrender.com/)
+
 A full-stack calorie and macro calculator built as a small commercial-style
 monorepo. The React app communicates only with a Backend-for-Frontend (BFF),
 which validates the shared contract before calling the Flask service.
